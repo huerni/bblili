@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package user;
+option go_package="./user";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+message UserInfo {
+  uint64 id = 1;
+  string nick = 2;
+  string avatar = 3;
+  string sign = 4;
+  int32 gender = 5;
+  string birth = 6;
+}
+
+message AddUserRequest {
+  string username = 1;
+  string password = 2;
+  string phone = 3;
+  string email = 4;
+}
+
+message AddUserResponse {
+
+}
+
+message LoginRequest {
+  string usernameOrPhoneOrEmail = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string authToken = 1;
+}
+
+message UpdateUserRequest {
+  UserInfo userInfo = 1;
+}
+
+message UpdateUserResponse {
+
+}
+
+message UsersRequest {
+
+}
+
+message UsersResponse {
+  repeated UserInfo userInfos = 1;
+}
+
+message LogoutRequest {
+  uint64 userId = 1;
+}
+
+message LogoutResponse {
+
+}
+
+service User {
+  rpc Ping(Request) returns(Response);
+  rpc AddUser(AddUserRequest) returns(AddUserResponse);
+  rpc Login(LoginRequest) returns(LoginResponse);
+  rpc UpdateUser(UpdateUserRequest) returns(UpdateUserResponse);
+  rpc Users(UsersRequest) returns (UsersResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+}

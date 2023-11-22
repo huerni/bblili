@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: bblili-mysql
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    volumes: 
+      - /etc/localtime:/etc/localtime
+      - ./mysql-init:/docker-entrypoint-initdb.d # 启动脚本
+    #  - ./docker/software/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: 123456
+    restart: always
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+
+  Etcd:
+    image: bitnami/etcd:latest
+    restart: always
+    container_name: bblili-etcd
+    environment:
+      - "ALLOW_NONE_AUTHENTICATION=yes"
+      - "ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379"
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
+  redis:
+    image:  redis:latest
+    restart: always
+    container_name: bblili-redis
+    command: redis-server --appendonly yes --requirepass '123456'
+    environment:
+      - TZ=Asia/Shanghai # 设置时区
+    ports:
+      - 6379:6379
