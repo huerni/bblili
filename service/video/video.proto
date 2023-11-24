@@ -11,6 +11,145 @@ message Response {
   string pong = 1;
 }
 
+message VideoInfo {
+  uint64 id = 1;
+  uint64 userId = 2;
+  string url = 3;
+  string thumbnail = 4;
+  string title = 5;
+  int32 types = 6;
+  string duration = 7;
+  string area = 8;
+  string description = 9;
+  repeated uint64 tagList = 10;
+}
+
+message UserInfo {
+  uint64 id = 1;
+  string nick = 2;
+  string avatar = 3;
+  string sign = 4;
+  int32 gender = 5;
+  string birth = 6;
+}
+
+message AddVideoRequest {
+  VideoInfo video = 1;
+}
+
+message AddVideoResponse {
+
+}
+
+message GetVideosRequest {
+  int32 size = 1;
+  int32 page = 2;
+  string area = 3;
+}
+
+message GetVideosResponse {
+  repeated VideoInfo videos = 1;
+}
+
+message ViewVideoRequest {
+  string url = 1;
+}
+
+message ViewVideoResponse {
+
+}
+
+message GetVideoDetailsRequest {
+  uint64 videoId = 1;
+}
+
+message GetVideoDetailsResponse {
+  VideoInfo video = 1;
+  UserInfo userInfo = 2;
+}
+
+message RecommendRequest {
+  uint64 userId = 1;
+}
+
+message RecommendResponse {
+  repeated VideoInfo videos = 1;
+}
+
+message OperateVideoSanLianRequest {
+  uint64 videoId = 1;
+  uint64 userId = 2;
+  optional uint64 groupId = 3;
+  int32 operator = 4;
+}
+
+message OperateVideoSanLianResponse {
+
+}
+
+
+message GetVideoSanLianRequest {
+  uint64 videoId = 1;
+}
+
+message GetVideoSanLianResponse {
+  int32 coinCount = 1;
+  int32 likeCount = 2;
+  int32 collectionCount = 3;
+}
+
+message GetVideoUserSanLianRequest {
+  uint64 videoId = 1;
+  uint64 userId = 2;
+}
+
+message GetVideoUserSanLianResponse {
+  int32 coinCount = 1;
+  bool isLike = 2;
+  bool isCollection = 3;
+}
+
+message VideoComment {
+  uint64 videoId = 1;
+  uint64 userId = 2;
+  string comment = 3;
+  uint64 replyUserId = 4;
+  uint64 rootId = 5;
+  UserInfo userInfo = 6;
+  UserInfo replyUserInfo = 7;
+  repeated VideoComment childList = 8;
+}
+
+message AddVideoCommentRequest {
+  VideoComment videoComment = 1;
+}
+
+message AddVideoCommentResponse {
+
+}
+
+message GetVideoCommentsRequest {
+  int32 size = 1;
+  int32 page = 2;
+  uint64 videoId = 3;
+}
+
+message GetVideoCommentsResponse {
+  repeated VideoComment videoComment = 1;
+}
+
 service Video {
   rpc Ping(Request) returns(Response);
+  rpc AddVideo(AddVideoRequest) returns(AddVideoResponse);
+  rpc GetVideos(GetVideosRequest) returns(GetVideosResponse);
+  rpc ViewVideo(ViewVideoRequest) returns(ViewVideoResponse);
+  rpc GetVideoDetails(GetVideoDetailsRequest) returns(GetVideoDetailsResponse);
+  rpc Recommend(RecommendRequest) returns(RecommendResponse);
+
+  rpc GetVideoSanLian(GetVideoSanLianRequest) returns(GetVideoSanLianResponse);
+  rpc GetVideoUserSanLian(GetVideoUserSanLianRequest) returns(GetVideoUserSanLianResponse);
+  rpc OperateVideoSanLian(OperateVideoSanLianRequest) returns(OperateVideoSanLianResponse);
+
+  rpc AddVideoComment(AddVideoCommentRequest) returns(AddVideoCommentResponse);
+  rpc GetVideoComments(GetVideoCommentsRequest) returns(GetVideoCommentsResponse);
 }

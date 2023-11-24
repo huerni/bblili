@@ -51,3 +51,18 @@ func (s *UserServer) Logout(ctx context.Context, in *user.LogoutRequest) (*user.
 	l := logic.NewLogoutLogic(ctx, s.svcCtx)
 	return l.Logout(in)
 }
+
+func (s *UserServer) GetUserInfo(ctx context.Context, in *user.GetUserInfoRequest) (*user.GetUserInfoResponse, error) {
+	l := logic.NewGetUserInfoLogic(ctx, s.svcCtx)
+	return l.GetUserInfo(in)
+}
+
+func (s *UserServer) GetUser(ctx context.Context, in *user.GetUserRequest) (*user.GetUserResponse, error) {
+	l := logic.NewGetUserLogic(ctx, s.svcCtx)
+	return l.GetUser(in)
+}
+
+func (s *UserServer) AddUserInfo(ctx context.Context, in *user.AddUserInfoRequest) (*user.AddUserInfoResponse, error) {
+	l := logic.NewAddUserInfoLogic(ctx, s.svcCtx)
+	return l.AddUserInfo(in)
+}

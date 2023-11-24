@@ -13,19 +13,25 @@ import (
 )
 
 type (
-	AddUserRequest     = user.AddUserRequest
-	AddUserResponse    = user.AddUserResponse
-	LoginRequest       = user.LoginRequest
-	LoginResponse      = user.LoginResponse
-	LogoutRequest      = user.LogoutRequest
-	LogoutResponse     = user.LogoutResponse
-	Request            = user.Request
-	Response           = user.Response
-	UpdateUserRequest  = user.UpdateUserRequest
-	UpdateUserResponse = user.UpdateUserResponse
-	UserInfo           = user.UserInfo
-	UsersRequest       = user.UsersRequest
-	UsersResponse      = user.UsersResponse
+	AddUserInfoRequest  = user.AddUserInfoRequest
+	AddUserInfoResponse = user.AddUserInfoResponse
+	AddUserRequest      = user.AddUserRequest
+	AddUserResponse     = user.AddUserResponse
+	GetUserInfoRequest  = user.GetUserInfoRequest
+	GetUserInfoResponse = user.GetUserInfoResponse
+	GetUserRequest      = user.GetUserRequest
+	GetUserResponse     = user.GetUserResponse
+	LoginRequest        = user.LoginRequest
+	LoginResponse       = user.LoginResponse
+	LogoutRequest       = user.LogoutRequest
+	LogoutResponse      = user.LogoutResponse
+	Request             = user.Request
+	Response            = user.Response
+	UpdateUserRequest   = user.UpdateUserRequest
+	UpdateUserResponse  = user.UpdateUserResponse
+	UserInfo            = user.UserInfo
+	UsersRequest        = user.UsersRequest
+	UsersResponse       = user.UsersResponse
 
 	User interface {
 		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
@@ -34,6 +40,9 @@ type (
 		UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 		Users(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*UsersResponse, error)
 		Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+		GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+		AddUserInfo(ctx context.Context, in *AddUserInfoRequest, opts ...grpc.CallOption) (*AddUserInfoResponse, error)
 	}
 
 	defaultUser struct {
@@ -75,4 +84,19 @@ func (m *defaultUser) Users(ctx context.Context, in *UsersRequest, opts ...grpc.
 func (m *defaultUser) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Logout(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUserInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUser(ctx, in, opts...)
+}
+
+func (m *defaultUser) AddUserInfo(ctx context.Context, in *AddUserInfoRequest, opts ...grpc.CallOption) (*AddUserInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.AddUserInfo(ctx, in, opts...)
 }

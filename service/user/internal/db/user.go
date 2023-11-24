@@ -43,12 +43,12 @@ func QueryUserByEmail(ctx context.Context, email string) ([]*User, error) {
 	return res, nil
 }
 
-func QueryUserById(ctx context.Context, ID uint64) ([]*User, error) {
-	res := make([]*User, 0)
+func QueryUserById(ctx context.Context, ID uint64) (*User, error) {
+	var res User
 	if err := DB.WithContext(ctx).Where("id = ?", ID).Find(&res).Error; err != nil {
 		return nil, err
 	}
-	return res, nil
+	return &res, nil
 }
 
 func InsertUser(ctx context.Context, user *User) error {

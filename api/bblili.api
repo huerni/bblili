@@ -55,6 +55,22 @@ type (
 		Phone    string `json:"phone"`
 		Email    string `json:"email"`
 	}
+
+	AddVideoRequest {
+		userId uint64 `json:"userId"`
+		url string `json:"url"`
+		thumbnail string `json:"thumbnail"`
+		title string `json:"title"`
+		types int32 `json:"types"`
+		duration int32  `json:"duration"`
+		area string `json:"area"`
+		description string `json:"description"`
+		videoTagList []uint64 `json:"videoTagList"`
+	}
+
+	AddVideoResponse {
+
+	}
 )
 
 service bblili-api {
@@ -77,4 +93,9 @@ service bblili-api {
 
 	@handler GetUserInfo
 	get /api/userInfo/query/:userId(GetUserInfoRequest) returns(GetUserInfoResponse)
+
+	// video
+	@handler AddVideo
+	post /api/video/add(AddVideoRequest) returns(AddVideoResponse)
+
 }

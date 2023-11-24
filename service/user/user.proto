@@ -18,6 +18,7 @@ message UserInfo {
   string sign = 4;
   int32 gender = 5;
   string birth = 6;
+  uint64 userId = 7;
 }
 
 message AddUserRequest {
@@ -64,6 +65,33 @@ message LogoutResponse {
 
 }
 
+message GetUserInfoRequest {
+  uint64 userId = 1;
+}
+
+message GetUserInfoResponse {
+  UserInfo userInfo = 1;
+}
+
+message GetUserRequest {
+  uint64 userId = 1;
+}
+
+message GetUserResponse {
+  string username = 1;
+  string password = 2;
+  string phone = 3;
+  string email = 4;
+}
+
+message AddUserInfoRequest {
+  UserInfo userInfo = 1;
+}
+
+message AddUserInfoResponse {
+
+}
+
 service User {
   rpc Ping(Request) returns(Response);
   rpc AddUser(AddUserRequest) returns(AddUserResponse);
@@ -71,4 +99,7 @@ service User {
   rpc UpdateUser(UpdateUserRequest) returns(UpdateUserResponse);
   rpc Users(UsersRequest) returns (UsersResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc AddUserInfo(AddUserInfoRequest) returns (AddUserInfoResponse);
 }

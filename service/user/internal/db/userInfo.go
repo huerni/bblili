@@ -14,6 +14,11 @@ type UserInfo struct {
 	Sign   string `gorm:"column:sign;type:text"`
 	Gender int32  `gorm:"column:gender;type:integer"`
 	Birth  string `gorm:"column:birth;type:varchar(20)"`
+	UserId uint64
+}
+
+func (UserInfo) TableName() string {
+	return "t_user_info"
 }
 
 func QueryByUserId(ctx context.Context, userId uint64) ([]*UserInfo, error) {
@@ -31,4 +36,12 @@ func InsertUserInfo(ctx context.Context, userInfo *UserInfo) error {
 
 func UpdateUserInfo(ctx context.Context, userInfo *UserInfo) error {
 	return DB.WithContext(ctx).Updates(userInfo).Error
+}
+
+func QueryUserInfoByUserId(ctx context.Context, userId uint64) (*UserInfo, error) {
+	res := &UserInfo{}
+	if err := DB.WithContext(ctx).Where("user_id = ?", userId).Find(&res).Error; err != nil {
+		return nil, err
+	}
+	return res, nil
 }

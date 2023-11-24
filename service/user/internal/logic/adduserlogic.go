@@ -32,21 +32,21 @@ func (l *AddUserLogic) AddUser(in *user.AddUserRequest) (*user.AddUserResponse, 
 	if err != nil {
 		return nil, err
 	}
-	if users != nil {
+	if users != nil && len(users) > 0 {
 		return nil, fmt.Errorf("用户名已存在")
 	}
 	users, err = db.QueryUserByPhone(l.ctx, in.Phone)
 	if err != nil {
 		return nil, err
 	}
-	if users != nil {
+	if users != nil && len(users) > 0 {
 		return nil, fmt.Errorf("电话号码已存在")
 	}
 	users, err = db.QueryUserByEmail(l.ctx, in.Email)
 	if err != nil {
 		return nil, err
 	}
-	if users != nil {
+	if users != nil && len(users) > 0 {
 		return nil, fmt.Errorf("邮箱已存在")
 	}
 	var insertUser = db.User{

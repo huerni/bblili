@@ -1,0 +1,14 @@
+Name: video.rpc
+ListenOn: 0.0.0.0:8081
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: video.rpc
+
+DSN: root:123456@tcp(127.0.0.1:3306)/bilibili_video?charset=utf8mb4&parseTime=True&loc=Local
+
+User:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc

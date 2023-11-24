@@ -6,3 +6,8 @@ User:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
+Video:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: video.rpc
