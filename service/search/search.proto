@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package search;
+option go_package="./search";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+message VideoInfo {
+  uint64 id = 1;
+  uint64 userId = 2;
+  string url = 3;
+  string thumbnail = 4;
+  string title = 5;
+  int32 types = 6;
+  string duration = 7;
+  string area = 8;
+  string description = 9;
+  repeated uint64 tagList = 10;
+}
+
+message UserInfo {
+  uint64 id = 1;
+  string nick = 2;
+  string avatar = 3;
+  string sign = 4;
+  int32 gender = 5;
+  string birth = 6;
+}
+
+message AddVideoRequest {
+  VideoInfo video = 1;
+}
+
+message AddVideoResponse {
+
+}
+
+message AddUserInfoRequest {
+  UserInfo userInfo = 1;
+}
+
+message AddUserInfoResponse {
+
+}
+
+message GetContentRequest {
+  string keyword = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetContentResponse {
+  repeated google.protobuf.Any result = 1;
+}
+
+service Search {
+  rpc Ping(Request) returns(Response);
+  rpc AddUserInfo(AddUserInfoRequest) returns(AddUserInfoResponse);
+  rpc AddVideo(AddVideoRequest) returns(AddVideoResponse);
+  rpc GetContent(GetContentRequest) returns(GetContentResponse);
+}
