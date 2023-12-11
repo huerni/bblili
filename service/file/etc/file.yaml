@@ -1,0 +1,13 @@
+Name: file.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: file.rpc
+DSN: root:123456@tcp(127.0.0.1:3306)/bilibili_file?charset=utf8mb4&parseTime=True&loc=Local
+
+MinIO:
+  Endpoint: 127.0.0.1:9000
+  AccessKeyID: admin
+  SecretAccessKey: admin123
+  UseSSL: false

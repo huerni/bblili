@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package file;
+option go_package="./file";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+message UpLoadFileBySlicesRequest {
+  string fileMD5 = 1;
+  string fileType = 2;
+  int32 sliceNumber = 3;
+  int32 sliceSize = 4;
+}
+
+message UploadFileBySliceResponse {
+  string url = 1;
+}
+
+message DeleteFileRequest {
+  string filePath = 1;
+}
+
+message DeleteFileResponse {
+
+}
+
+message GetFileMD5Request {
+  bytes file = 1;
+}
+
+message GetFileMD5Response {
+  string result = 1;
+}
+
+message GetSuccessChunkRequest {
+  string fileMD5 = 1;
+  string filetype = 2;
+  int32 totalChunkCount = 3;
+}
+
+message GetSuccessChunkResponse {
+  string uploadID = 1;
+  string uuId = 2;
+  string chunks = 3;
+}
+
+service File {
+  rpc Ping(Request) returns(Response);
+  rpc UploadFileSlices(UpLoadFileBySlicesRequest) returns(UploadFileBySliceResponse);
+  rpc DeleteFileMD5(GetFileMD5Request) returns(GetFileMD5Response);
+  rpc GetFileMD5(GetFileMD5Request) returns(GetFileMD5Response);
+  rpc GetSuccessChunk(GetSuccessChunkRequest) returns(GetSuccessChunkResponse);
+}

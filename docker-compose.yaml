@@ -61,3 +61,53 @@ services:
       - elastic
     ports:
       - 5601:5601
+
+  fastdfs-tracker:
+    image: season/fastdfs:1.2
+    container_name: bblili-tracker
+    restart: no
+    ports:
+      - 22122:22122
+    command: "tracker"
+
+  fastdfs-storage:
+    image: season/fastdfs:1.2
+    container_name: bblili-storage
+    depends_on:
+      - fastdfs-tracker
+    restart: no
+    volumes:
+      - "./docker/fastdfs/fdfs_conf/storage.conf:/fdfs_conf/storage.conf"
+      - "./docker/fastdfs/store_path:/fastdfs/store_path"
+    ports:
+      - "23000:23000"
+    environment:
+      - TRACKER_SERVER=bblili-tracker:22122
+    command: "storage"
+
+  fastdfs-nginx:
+    image: season/fastdfs:1.2
+    container_name: bblili-nginx
+    restart: always
+    volumes:
+      - "./docker/fastdfs/nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf"
+      - "./docker/fastdfs/store_path:/fastdfs/store_path"
+    links:
+      - fastdfs-tracker
+    ports:
+      - "8088:8088"
+    environment:
+      - TRACKER_SERVER=bblili-tracker:22122
+    command: "nginx"
+
+  minio:
+    image: minio/minio
+    container_name: bblili-minio
+    ports:
+      - 9000:9000 # api 端口
+      - 9001:9001 # 控制台端口
+    environment:
+      MINIO_ACCESS_KEY: admin    #管理后台用户名
+      MINIO_SECRET_KEY: admin123 #管理后台密码，最小8个字符
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    restart: always
