@@ -46,3 +46,8 @@ func (s *FileServer) GetSuccessChunk(ctx context.Context, in *file.GetSuccessChu
 	l := logic.NewGetSuccessChunkLogic(ctx, s.svcCtx)
 	return l.GetSuccessChunk(in)
 }
+
+func (s *FileServer) GetFileUrlByMD5(ctx context.Context, in *file.GetFileUrlByMD5Request) (*file.GetFileUrlByMD5Response, error) {
+	l := logic.NewGetFileUrlByMD5Logic(ctx, s.svcCtx)
+	return l.GetFileUrlByMD5(in)
+}

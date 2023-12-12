@@ -17,6 +17,8 @@ type (
 	DeleteFileResponse        = file.DeleteFileResponse
 	GetFileMD5Request         = file.GetFileMD5Request
 	GetFileMD5Response        = file.GetFileMD5Response
+	GetFileUrlByMD5Request    = file.GetFileUrlByMD5Request
+	GetFileUrlByMD5Response   = file.GetFileUrlByMD5Response
 	GetSuccessChunkRequest    = file.GetSuccessChunkRequest
 	GetSuccessChunkResponse   = file.GetSuccessChunkResponse
 	Request                   = file.Request
@@ -30,6 +32,7 @@ type (
 		DeleteFileMD5(ctx context.Context, in *GetFileMD5Request, opts ...grpc.CallOption) (*GetFileMD5Response, error)
 		GetFileMD5(ctx context.Context, in *GetFileMD5Request, opts ...grpc.CallOption) (*GetFileMD5Response, error)
 		GetSuccessChunk(ctx context.Context, in *GetSuccessChunkRequest, opts ...grpc.CallOption) (*GetSuccessChunkResponse, error)
+		GetFileUrlByMD5(ctx context.Context, in *GetFileUrlByMD5Request, opts ...grpc.CallOption) (*GetFileUrlByMD5Response, error)
 	}
 
 	defaultFile struct {
@@ -66,4 +69,9 @@ func (m *defaultFile) GetFileMD5(ctx context.Context, in *GetFileMD5Request, opt
 func (m *defaultFile) GetSuccessChunk(ctx context.Context, in *GetSuccessChunkRequest, opts ...grpc.CallOption) (*GetSuccessChunkResponse, error) {
 	client := file.NewFileClient(m.cli.Conn())
 	return client.GetSuccessChunk(ctx, in, opts...)
+}
+
+func (m *defaultFile) GetFileUrlByMD5(ctx context.Context, in *GetFileUrlByMD5Request, opts ...grpc.CallOption) (*GetFileUrlByMD5Response, error) {
+	client := file.NewFileClient(m.cli.Conn())
+	return client.GetFileUrlByMD5(ctx, in, opts...)
 }

@@ -43,7 +43,7 @@ func (l *GetSuccessChunkLogic) GetSuccessChunk(in *file.GetSuccessChunkRequest) 
 	if err != nil {
 		return nil, err
 	}
-
+	var uploaded = true
 	if qFile.UUID == "" {
 		uuid = uuid2.NewV4().String()
 		bucketName := config.MINIO_BUCKET
@@ -64,7 +64,8 @@ func (l *GetSuccessChunkLogic) GetSuccessChunk(in *file.GetSuccessChunkRequest) 
 		if err != nil {
 			return nil, err
 		}
-	} else {
+		uploaded = false
+	} else if qFile.Uploaded == false {
 		uuid = qFile.UUID
 		uploadID = qFile.UploadID
 		bucketName := config.MINIO_BUCKET
@@ -77,6 +78,7 @@ func (l *GetSuccessChunkLogic) GetSuccessChunk(in *file.GetSuccessChunkRequest) 
 		for _, partInfo := range partInfos.ObjectParts {
 			chunks += strconv.Itoa(partInfo.PartNumber) + "-" + partInfo.ETag + ","
 		}
+		uploaded = false
 		// 上传完成
 		if len(partInfos.ObjectParts) == int(in.TotalChunkCount) {
 			// 文件合并
@@ -103,12 +105,14 @@ func (l *GetSuccessChunkLogic) GetSuccessChunk(in *file.GetSuccessChunkRequest) 
 				Md5:      qFile.Md5,
 				UUID:     qFile.UUID,
 				UploadID: qFile.UploadID,
+				Uploaded: true,
 			})
 			if err != nil {
 				return nil, err
 			}
+			uploaded = true
 		}
 	}
 
-	return &file.GetSuccessChunkResponse{UuId: uuid, UploadID: uploadID, Chunks: chunks}, nil
+	return &file.GetSuccessChunkResponse{UuId: uuid, UploadID: uploadID, Chunks: chunks, Uploaded: uploaded}, nil
 }

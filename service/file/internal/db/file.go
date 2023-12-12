@@ -12,6 +12,7 @@ type File struct {
 	Md5      string
 	UUID     string
 	UploadID string
+	Uploaded bool
 }
 
 func (f *File) TableName() string {

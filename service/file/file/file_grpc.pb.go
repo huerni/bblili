@@ -24,6 +24,7 @@ const (
 	File_DeleteFileMD5_FullMethodName    = "/file.File/DeleteFileMD5"
 	File_GetFileMD5_FullMethodName       = "/file.File/GetFileMD5"
 	File_GetSuccessChunk_FullMethodName  = "/file.File/GetSuccessChunk"
+	File_GetFileUrlByMD5_FullMethodName  = "/file.File/GetFileUrlByMD5"
 )
 
 // FileClient is the client API for File service.
@@ -35,6 +36,7 @@ type FileClient interface {
 	DeleteFileMD5(ctx context.Context, in *GetFileMD5Request, opts ...grpc.CallOption) (*GetFileMD5Response, error)
 	GetFileMD5(ctx context.Context, in *GetFileMD5Request, opts ...grpc.CallOption) (*GetFileMD5Response, error)
 	GetSuccessChunk(ctx context.Context, in *GetSuccessChunkRequest, opts ...grpc.CallOption) (*GetSuccessChunkResponse, error)
+	GetFileUrlByMD5(ctx context.Context, in *GetFileUrlByMD5Request, opts ...grpc.CallOption) (*GetFileUrlByMD5Response, error)
 }
 
 type fileClient struct {
@@ -90,6 +92,15 @@ func (c *fileClient) GetSuccessChunk(ctx context.Context, in *GetSuccessChunkReq
 	return out, nil
 }
 
+func (c *fileClient) GetFileUrlByMD5(ctx context.Context, in *GetFileUrlByMD5Request, opts ...grpc.CallOption) (*GetFileUrlByMD5Response, error) {
+	out := new(GetFileUrlByMD5Response)
+	err := c.cc.Invoke(ctx, File_GetFileUrlByMD5_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServer is the server API for File service.
 // All implementations must embed UnimplementedFileServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type FileServer interface {
 	DeleteFileMD5(context.Context, *GetFileMD5Request) (*GetFileMD5Response, error)
 	GetFileMD5(context.Context, *GetFileMD5Request) (*GetFileMD5Response, error)
 	GetSuccessChunk(context.Context, *GetSuccessChunkRequest) (*GetSuccessChunkResponse, error)
+	GetFileUrlByMD5(context.Context, *GetFileUrlByMD5Request) (*GetFileUrlByMD5Response, error)
 	mustEmbedUnimplementedFileServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedFileServer) GetFileMD5(context.Context, *GetFileMD5Request) (
 }
 func (UnimplementedFileServer) GetSuccessChunk(context.Context, *GetSuccessChunkRequest) (*GetSuccessChunkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSuccessChunk not implemented")
+}
+func (UnimplementedFileServer) GetFileUrlByMD5(context.Context, *GetFileUrlByMD5Request) (*GetFileUrlByMD5Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFileUrlByMD5 not implemented")
 }
 func (UnimplementedFileServer) mustEmbedUnimplementedFileServer() {}
 
@@ -224,6 +239,24 @@ func _File_GetSuccessChunk_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _File_GetFileUrlByMD5_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileUrlByMD5Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServer).GetFileUrlByMD5(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: File_GetFileUrlByMD5_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServer).GetFileUrlByMD5(ctx, req.(*GetFileUrlByMD5Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // File_ServiceDesc is the grpc.ServiceDesc for File service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var File_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSuccessChunk",
 			Handler:    _File_GetSuccessChunk_Handler,
+		},
+		{
+			MethodName: "GetFileUrlByMD5",
+			Handler:    _File_GetFileUrlByMD5_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -10,6 +10,7 @@ CREATE TABLE `t_file` (
                           `md5` varchar(500) DEFAULT NULL COMMENT '文件MD5唯一标识',
                           `uuid` varchar(500) DEFAULT NULL COMMENT '文件唯一标识',
                           `upload_id` varchar(500) DEFAULT NULL COMMENT 'minio上传id',
+                          `uploaded` TINYINT(1) DEFAULT FALSE COMMENT '是否上传完成',
                           `created_at` datetime(3) NULL COMMENT '创建时间',
                           `updated_at` datetime(3) NULL COMMENT '更新时间',
                           `deleted_at` datetime(3) NULL COMMENT '删除时间',

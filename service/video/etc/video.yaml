@@ -1,5 +1,5 @@
 Name: video.rpc
-ListenOn: 0.0.0.0:8081
+ListenOn: 0.0.0.0:8083
 Etcd:
   Hosts:
   - 127.0.0.1:2379
@@ -12,3 +12,9 @@ User:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
+
+File:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: file.rpc

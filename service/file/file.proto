@@ -48,6 +48,15 @@ message GetSuccessChunkResponse {
   string uploadID = 1;
   string uuId = 2;
   string chunks = 3;
+  bool uploaded = 4;
+}
+
+message GetFileUrlByMD5Request {
+  string md5 = 1;
+}
+
+message GetFileUrlByMD5Response {
+  string url = 1;
 }
 
 service File {
@@ -56,4 +65,5 @@ service File {
   rpc DeleteFileMD5(GetFileMD5Request) returns(GetFileMD5Response);
   rpc GetFileMD5(GetFileMD5Request) returns(GetFileMD5Response);
   rpc GetSuccessChunk(GetSuccessChunkRequest) returns(GetSuccessChunkResponse);
+  rpc GetFileUrlByMD5(GetFileUrlByMD5Request) returns(GetFileUrlByMD5Response);
 }

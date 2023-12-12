@@ -34,7 +34,15 @@ message UserInfo {
 }
 
 message AddVideoRequest {
-  VideoInfo video = 1;
+  uint64 userId = 1;
+  string thumbnail = 2;
+  string title = 3;
+  int32 types = 4;
+  string duration = 5;
+  string area = 6;
+  string description = 7;
+  repeated uint64 tagList = 8;
+  string fileMd5 = 9;
 }
 
 message AddVideoResponse {

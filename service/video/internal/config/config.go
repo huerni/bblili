@@ -6,4 +6,5 @@ type Config struct {
 	zrpc.RpcServerConf
 	DSN  string `json:"dsn"`
 	User zrpc.RpcClientConf
+	File zrpc.RpcClientConf
 }
