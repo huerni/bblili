@@ -69,3 +69,16 @@ CREATE TABLE `t_video_like` (
                                 PRIMARY KEY (`id`),INDEX `idx_t_video_like_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='视频点赞表';
 
+DROP TABLE IF EXISTS `t_danmu`;
+CREATE TABLE `t_danmu` (
+                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键id',
+                           `user_id` bigint DEFAULT NULL COMMENT '用户id',
+                           `video_id` bigint DEFAULT NULL COMMENT '视频id',
+                           `content` text COMMENT '弹幕内容',
+                           `danmu_time` varchar(500) DEFAULT NULL COMMENT '弹幕出现时间',
+                           `created_at` datetime(3) NULL COMMENT '创建时间',
+                           `updated_at` datetime(3) NULL COMMENT '更新时间',
+                           `deleted_at` datetime(3) NULL COMMENT '删除时间',
+                           PRIMARY KEY (`id`),INDEX `idx_t_video_like_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='弹幕表';
+

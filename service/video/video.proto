@@ -146,6 +146,29 @@ message GetVideoCommentsResponse {
   repeated VideoComment videoComment = 1;
 }
 
+message DanMuInfo {
+    uint64 UserId = 1;
+    uint64 videoId = 2;
+    string Content = 3;
+    string danmuTime = 4;
+}
+
+message AddDanMuRequset {
+  DanMuInfo danmuInfo = 1;
+}
+
+message AddDanMuResponse {
+
+}
+
+message GetDanmusRequest {
+  uint64 videoId = 1;
+}
+
+message GetDanmusResponse {
+  repeated DanMuInfo danmuInfo = 1;
+}
+
 service Video {
   rpc Ping(Request) returns(Response);
   rpc AddVideo(AddVideoRequest) returns(AddVideoResponse);
@@ -160,4 +183,8 @@ service Video {
 
   rpc AddVideoComment(AddVideoCommentRequest) returns(AddVideoCommentResponse);
   rpc GetVideoComments(GetVideoCommentsRequest) returns(GetVideoCommentsResponse);
+
+  // 弹幕
+  rpc AddDanMu(AddDanMuRequset) returns(AddDanMuResponse);
+  rpc GetDanmus(GetDanmusRequest) returns(GetDanmusResponse);
 }
