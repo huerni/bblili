@@ -30,8 +30,8 @@ const (
 	Video_OperateVideoSanLian_FullMethodName = "/video.Video/OperateVideoSanLian"
 	Video_AddVideoComment_FullMethodName     = "/video.Video/AddVideoComment"
 	Video_GetVideoComments_FullMethodName    = "/video.Video/GetVideoComments"
-	Video_AddDanMu_FullMethodName            = "/video.Video/AddDanMu"
-	Video_GetDanmus_FullMethodName           = "/video.Video/GetDanmus"
+	Video_AddBarrage_FullMethodName          = "/video.Video/AddBarrage"
+	Video_GetBarrages_FullMethodName         = "/video.Video/GetBarrages"
 )
 
 // VideoClient is the client API for Video service.
@@ -49,9 +49,9 @@ type VideoClient interface {
 	OperateVideoSanLian(ctx context.Context, in *OperateVideoSanLianRequest, opts ...grpc.CallOption) (*OperateVideoSanLianResponse, error)
 	AddVideoComment(ctx context.Context, in *AddVideoCommentRequest, opts ...grpc.CallOption) (*AddVideoCommentResponse, error)
 	GetVideoComments(ctx context.Context, in *GetVideoCommentsRequest, opts ...grpc.CallOption) (*GetVideoCommentsResponse, error)
-	// 弹幕
-	AddDanMu(ctx context.Context, in *AddDanMuRequset, opts ...grpc.CallOption) (*AddDanMuResponse, error)
-	GetDanmus(ctx context.Context, in *GetDanmusRequest, opts ...grpc.CallOption) (*GetDanmusResponse, error)
+	// 添加弹幕
+	AddBarrage(ctx context.Context, in *AddBarrageRequset, opts ...grpc.CallOption) (*AddBarrageResponse, error)
+	GetBarrages(ctx context.Context, in *GetBarragesRequest, opts ...grpc.CallOption) (*GetBarragesResponse, error)
 }
 
 type videoClient struct {
@@ -161,18 +161,18 @@ func (c *videoClient) GetVideoComments(ctx context.Context, in *GetVideoComments
 	return out, nil
 }
 
-func (c *videoClient) AddDanMu(ctx context.Context, in *AddDanMuRequset, opts ...grpc.CallOption) (*AddDanMuResponse, error) {
-	out := new(AddDanMuResponse)
-	err := c.cc.Invoke(ctx, Video_AddDanMu_FullMethodName, in, out, opts...)
+func (c *videoClient) AddBarrage(ctx context.Context, in *AddBarrageRequset, opts ...grpc.CallOption) (*AddBarrageResponse, error) {
+	out := new(AddBarrageResponse)
+	err := c.cc.Invoke(ctx, Video_AddBarrage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoClient) GetDanmus(ctx context.Context, in *GetDanmusRequest, opts ...grpc.CallOption) (*GetDanmusResponse, error) {
-	out := new(GetDanmusResponse)
-	err := c.cc.Invoke(ctx, Video_GetDanmus_FullMethodName, in, out, opts...)
+func (c *videoClient) GetBarrages(ctx context.Context, in *GetBarragesRequest, opts ...grpc.CallOption) (*GetBarragesResponse, error) {
+	out := new(GetBarragesResponse)
+	err := c.cc.Invoke(ctx, Video_GetBarrages_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,9 +194,9 @@ type VideoServer interface {
 	OperateVideoSanLian(context.Context, *OperateVideoSanLianRequest) (*OperateVideoSanLianResponse, error)
 	AddVideoComment(context.Context, *AddVideoCommentRequest) (*AddVideoCommentResponse, error)
 	GetVideoComments(context.Context, *GetVideoCommentsRequest) (*GetVideoCommentsResponse, error)
-	// 弹幕
-	AddDanMu(context.Context, *AddDanMuRequset) (*AddDanMuResponse, error)
-	GetDanmus(context.Context, *GetDanmusRequest) (*GetDanmusResponse, error)
+	// 添加弹幕
+	AddBarrage(context.Context, *AddBarrageRequset) (*AddBarrageResponse, error)
+	GetBarrages(context.Context, *GetBarragesRequest) (*GetBarragesResponse, error)
 	mustEmbedUnimplementedVideoServer()
 }
 
@@ -237,11 +237,11 @@ func (UnimplementedVideoServer) AddVideoComment(context.Context, *AddVideoCommen
 func (UnimplementedVideoServer) GetVideoComments(context.Context, *GetVideoCommentsRequest) (*GetVideoCommentsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVideoComments not implemented")
 }
-func (UnimplementedVideoServer) AddDanMu(context.Context, *AddDanMuRequset) (*AddDanMuResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddDanMu not implemented")
+func (UnimplementedVideoServer) AddBarrage(context.Context, *AddBarrageRequset) (*AddBarrageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBarrage not implemented")
 }
-func (UnimplementedVideoServer) GetDanmus(context.Context, *GetDanmusRequest) (*GetDanmusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDanmus not implemented")
+func (UnimplementedVideoServer) GetBarrages(context.Context, *GetBarragesRequest) (*GetBarragesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBarrages not implemented")
 }
 func (UnimplementedVideoServer) mustEmbedUnimplementedVideoServer() {}
 
@@ -454,38 +454,38 @@ func _Video_GetVideoComments_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Video_AddDanMu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddDanMuRequset)
+func _Video_AddBarrage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBarrageRequset)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServer).AddDanMu(ctx, in)
+		return srv.(VideoServer).AddBarrage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Video_AddDanMu_FullMethodName,
+		FullMethod: Video_AddBarrage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServer).AddDanMu(ctx, req.(*AddDanMuRequset))
+		return srv.(VideoServer).AddBarrage(ctx, req.(*AddBarrageRequset))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Video_GetDanmus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDanmusRequest)
+func _Video_GetBarrages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBarragesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServer).GetDanmus(ctx, in)
+		return srv.(VideoServer).GetBarrages(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Video_GetDanmus_FullMethodName,
+		FullMethod: Video_GetBarrages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServer).GetDanmus(ctx, req.(*GetDanmusRequest))
+		return srv.(VideoServer).GetBarrages(ctx, req.(*GetBarragesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -542,12 +542,12 @@ var Video_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Video_GetVideoComments_Handler,
 		},
 		{
-			MethodName: "AddDanMu",
-			Handler:    _Video_AddDanMu_Handler,
+			MethodName: "AddBarrage",
+			Handler:    _Video_AddBarrage_Handler,
 		},
 		{
-			MethodName: "GetDanmus",
-			Handler:    _Video_GetDanmus_Handler,
+			MethodName: "GetBarrages",
+			Handler:    _Video_GetBarrages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

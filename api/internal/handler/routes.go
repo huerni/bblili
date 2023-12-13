@@ -42,6 +42,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/api/userInfo/query/:userId",
 				Handler: GetUserInfoHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/video/add",
+				Handler: AddVideoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/ws/barrages",
+				Handler: GetBarrageWsHandler(serverCtx),
+			},
 		},
 	)
 }

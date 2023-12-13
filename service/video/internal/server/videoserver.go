@@ -77,13 +77,13 @@ func (s *VideoServer) GetVideoComments(ctx context.Context, in *video.GetVideoCo
 	return l.GetVideoComments(in)
 }
 
-// 弹幕
-func (s *VideoServer) AddDanMu(ctx context.Context, in *video.AddDanMuRequset) (*video.AddDanMuResponse, error) {
-	l := logic.NewAddDanMuLogic(ctx, s.svcCtx)
-	return l.AddDanMu(in)
+// 添加弹幕
+func (s *VideoServer) AddBarrage(ctx context.Context, in *video.AddBarrageRequset) (*video.AddBarrageResponse, error) {
+	l := logic.NewAddBarrageLogic(ctx, s.svcCtx)
+	return l.AddBarrage(in)
 }
 
-func (s *VideoServer) GetDanmus(ctx context.Context, in *video.GetDanmusRequest) (*video.GetDanmusResponse, error) {
-	l := logic.NewGetDanmusLogic(ctx, s.svcCtx)
-	return l.GetDanmus(in)
+func (s *VideoServer) GetBarrages(ctx context.Context, in *video.GetBarragesRequest) (*video.GetBarragesResponse, error) {
+	l := logic.NewGetBarragesLogic(ctx, s.svcCtx)
+	return l.GetBarrages(in)
 }

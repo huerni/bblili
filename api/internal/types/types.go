@@ -51,3 +51,34 @@ type GetUserResponse struct {
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 }
+
+type AddVideoRequest struct {
+	UserId       uint64   `json:"userId"`
+	Url          string   `json:"url"`
+	Thumbnail    string   `json:"thumbnail"`
+	Title        string   `json:"title"`
+	Types        int32    `json:"types"`
+	Duration     int32    `json:"duration"`
+	Area         string   `json:"area"`
+	Description  string   `json:"description"`
+	VideoTagList []uint64 `json:"videoTagList"`
+}
+
+type AddVideoResponse struct {
+}
+
+type GetBarragesWsRequest struct {
+	VideoId     uint64 `json:"videoId"`
+	CurrentTime int32  `json:"currentTime"`
+}
+
+type BarrageInfo struct {
+	UserId      uint64 `json:"userId"`
+	VideoId     uint64 `json:"videoId"`
+	Content     string `json:"content"`
+	BarrageTime int32  `json:"barrageTime"`
+}
+
+type GetBarragesResponse struct {
+	BarrageInfos []*BarrageInfo `json:"barrageInfos"`
+}

@@ -13,15 +13,15 @@ import (
 )
 
 type (
-	AddDanMuRequset             = video.AddDanMuRequset
-	AddDanMuResponse            = video.AddDanMuResponse
+	AddBarrageRequset           = video.AddBarrageRequset
+	AddBarrageResponse          = video.AddBarrageResponse
 	AddVideoCommentRequest      = video.AddVideoCommentRequest
 	AddVideoCommentResponse     = video.AddVideoCommentResponse
 	AddVideoRequest             = video.AddVideoRequest
 	AddVideoResponse            = video.AddVideoResponse
-	DanMuInfo                   = video.DanMuInfo
-	GetDanmusRequest            = video.GetDanmusRequest
-	GetDanmusResponse           = video.GetDanmusResponse
+	BarrageInfo                 = video.BarrageInfo
+	GetBarragesRequest          = video.GetBarragesRequest
+	GetBarragesResponse         = video.GetBarragesResponse
 	GetVideoCommentsRequest     = video.GetVideoCommentsRequest
 	GetVideoCommentsResponse    = video.GetVideoCommentsResponse
 	GetVideoDetailsRequest      = video.GetVideoDetailsRequest
@@ -56,9 +56,9 @@ type (
 		OperateVideoSanLian(ctx context.Context, in *OperateVideoSanLianRequest, opts ...grpc.CallOption) (*OperateVideoSanLianResponse, error)
 		AddVideoComment(ctx context.Context, in *AddVideoCommentRequest, opts ...grpc.CallOption) (*AddVideoCommentResponse, error)
 		GetVideoComments(ctx context.Context, in *GetVideoCommentsRequest, opts ...grpc.CallOption) (*GetVideoCommentsResponse, error)
-		// 弹幕
-		AddDanMu(ctx context.Context, in *AddDanMuRequset, opts ...grpc.CallOption) (*AddDanMuResponse, error)
-		GetDanmus(ctx context.Context, in *GetDanmusRequest, opts ...grpc.CallOption) (*GetDanmusResponse, error)
+		// 添加弹幕
+		AddBarrage(ctx context.Context, in *AddBarrageRequset, opts ...grpc.CallOption) (*AddBarrageResponse, error)
+		GetBarrages(ctx context.Context, in *GetBarragesRequest, opts ...grpc.CallOption) (*GetBarragesResponse, error)
 	}
 
 	defaultVideo struct {
@@ -127,13 +127,13 @@ func (m *defaultVideo) GetVideoComments(ctx context.Context, in *GetVideoComment
 	return client.GetVideoComments(ctx, in, opts...)
 }
 
-// 弹幕
-func (m *defaultVideo) AddDanMu(ctx context.Context, in *AddDanMuRequset, opts ...grpc.CallOption) (*AddDanMuResponse, error) {
+// 添加弹幕
+func (m *defaultVideo) AddBarrage(ctx context.Context, in *AddBarrageRequset, opts ...grpc.CallOption) (*AddBarrageResponse, error) {
 	client := video.NewVideoClient(m.cli.Conn())
-	return client.AddDanMu(ctx, in, opts...)
+	return client.AddBarrage(ctx, in, opts...)
 }
 
-func (m *defaultVideo) GetDanmus(ctx context.Context, in *GetDanmusRequest, opts ...grpc.CallOption) (*GetDanmusResponse, error) {
+func (m *defaultVideo) GetBarrages(ctx context.Context, in *GetBarragesRequest, opts ...grpc.CallOption) (*GetBarragesResponse, error) {
 	client := video.NewVideoClient(m.cli.Conn())
-	return client.GetDanmus(ctx, in, opts...)
+	return client.GetBarrages(ctx, in, opts...)
 }

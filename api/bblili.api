@@ -57,20 +57,27 @@ type (
 	}
 
 	AddVideoRequest {
-		userId uint64 `json:"userId"`
-		url string `json:"url"`
-		thumbnail string `json:"thumbnail"`
-		title string `json:"title"`
-		types int32 `json:"types"`
-		duration int32  `json:"duration"`
-		area string `json:"area"`
-		description string `json:"description"`
-		videoTagList []uint64 `json:"videoTagList"`
+		UserId       uint64   `json:"userId"`
+		Url          string   `json:"url"`
+		Thumbnail    string   `json:"thumbnail"`
+		Title        string   `json:"title"`
+		Types        int32    `json:"types"`
+		Duration     int32    `json:"duration"`
+		Area         string   `json:"area"`
+		Description  string   `json:"description"`
+		VideoTagList []uint64 `json:"videoTagList"`
 	}
 
 	AddVideoResponse {
-
 	}
+
+	BarrageInfo {
+		UserId      uint64 `json:"userId"`
+		VideoId     uint64 `json:"videoId"`
+		Content     string `json:"content"`
+		BarrageTime int32  `json:"barrageTime"`
+	}
+
 )
 
 service bblili-api {
@@ -97,5 +104,4 @@ service bblili-api {
 	// video
 	@handler AddVideo
 	post /api/video/add(AddVideoRequest) returns(AddVideoResponse)
-
 }
