@@ -11,3 +11,8 @@ Video:
     Hosts:
       - 127.0.0.1:2379
     Key: video.rpc
+File:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: file.rpc

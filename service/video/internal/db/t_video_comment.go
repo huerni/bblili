@@ -30,7 +30,7 @@ func PageQueryVideoCommentByVideoId(ctx context.Context, page int32, size int32,
 	res := make([]*VideoComment, 0)
 	var sqlstr string
 
-	sqlstr = "select id, create_at, update_at, delete_at, video_id, user_id, comment, reply_user_id, root_id from t_video_comment where video_id = ? and root_id is null and id = (select id from t_video_comment limit ? offset ? order by create_at)"
+	sqlstr = "select * from t_video_comment where id in (select id from t_video_comment where video_id = ? and root_id = 0 order by created_at desc) limit ? offset ?"
 	if err := DB.WithContext(ctx).Raw(sqlstr, videoId, size, (page-1)*size).Scan(&res).Error; err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func PageQueryVideoCommentByVideoId(ctx context.Context, page int32, size int32,
 func QueryVideoChildCommentByVideoId(ctx context.Context, videoId uint64, rootId uint64) ([]*VideoComment, error) {
 	res := make([]*VideoComment, 0)
 
-	if err := DB.WithContext(ctx).Where("video_id = ? and root_id = ?", videoId, rootId).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("video_id = ? and root_id = ?", videoId, rootId).Find(&res).Error; err != nil {
 		return nil, err
 	}
 

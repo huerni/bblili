@@ -49,10 +49,10 @@ func (l *OperateVideoSanLianLogic) OperateVideoSanLian(in *video.OperateVideoSan
 		}
 	case 1:
 		videoCoins, err := db.QueryVideoCoinByVideoIdAndUserId(l.ctx, in.VideoId, in.UserId)
-		if videoCoins != nil {
+		if err != nil {
 			return nil, err
 		}
-		if videoCoins == nil || len(videoCoins) == 0 {
+		if videoCoins == nil || videoCoins.ID == 0 {
 			if err := db.InsertVideoCoin(l.ctx, &db.VideoCoin{
 				Model:   gorm.Model{},
 				UserId:  in.UserId,
@@ -61,23 +61,20 @@ func (l *OperateVideoSanLianLogic) OperateVideoSanLian(in *video.OperateVideoSan
 			}); err != nil {
 				return nil, err
 			}
-		} else if videoCoins[0].Amount == 1 {
+		} else if videoCoins.Amount == 1 {
 			if err := db.UpdateVideoCoin(l.ctx, &db.VideoCoin{
-				Model:   gorm.Model{},
+				Model:   gorm.Model{ID: videoCoins.ID},
 				UserId:  in.UserId,
 				VideoId: in.VideoId,
 				Amount:  2,
 			}); err != nil {
 				return nil, err
 			}
-		} else if videoCoins[0].Amount == 2 {
+		} else if videoCoins.Amount == 2 {
 			return nil, fmt.Errorf("只能投两币！")
 		}
 	case 2:
-		if in.GroupId == nil {
-			return nil, fmt.Errorf("请确认参数正确")
-		}
-		videoCollections, err := db.QueryVideoCollectionByVideoIdAndUserIdAndGroupId(l.ctx, in.VideoId, in.UserId, *in.GroupId)
+		videoCollections, err := db.QueryVideoCollectionByVideoIdAndUserIdAndGroupId(l.ctx, in.VideoId, in.UserId, in.GroupId)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +83,7 @@ func (l *OperateVideoSanLianLogic) OperateVideoSanLian(in *video.OperateVideoSan
 				Model:   gorm.Model{},
 				VideoId: in.VideoId,
 				UserId:  in.UserId,
-				GroupId: *in.GroupId,
+				GroupId: in.GroupId,
 			}); err != nil {
 				return nil, err
 			}

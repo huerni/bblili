@@ -18,8 +18,8 @@ message VideoInfo {
   string thumbnail = 4;
   string title = 5;
   int32 types = 6;
-  string duration = 7;
-  string area = 8;
+  int32 duration = 7;
+  int32 area = 8;
   string description = 9;
   repeated uint64 tagList = 10;
 }
@@ -38,8 +38,8 @@ message AddVideoRequest {
   string thumbnail = 2;
   string title = 3;
   int32 types = 4;
-  string duration = 5;
-  string area = 6;
+  int32 duration = 5;
+  int32 area = 6;
   string description = 7;
   repeated uint64 tagList = 8;
   string fileMd5 = 9;
@@ -52,7 +52,7 @@ message AddVideoResponse {
 message GetVideosRequest {
   int32 size = 1;
   int32 page = 2;
-  string area = 3;
+  int32 area = 3;
 }
 
 message GetVideosResponse {
@@ -87,7 +87,7 @@ message RecommendResponse {
 message OperateVideoSanLianRequest {
   uint64 videoId = 1;
   uint64 userId = 2;
-  optional uint64 groupId = 3;
+  uint64 groupId = 3;
   int32 operator = 4;
 }
 
@@ -129,7 +129,11 @@ message VideoComment {
 }
 
 message AddVideoCommentRequest {
-  VideoComment videoComment = 1;
+  uint64 videoId = 1;
+  uint64 userId = 2;
+  string comment = 3;
+  uint64 replyUserId = 4;
+  uint64 rootId = 5;
 }
 
 message AddVideoCommentResponse {

@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bblili/service/video/videoclient"
 	"context"
 
 	"bblili/api/internal/svc"
@@ -24,7 +25,18 @@ func NewAddVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddVideo
 }
 
 func (l *AddVideoLogic) AddVideo(req *types.AddVideoRequest) (resp *types.AddVideoResponse, err error) {
-	// todo: add your logic here and delete this line
+
+	_, err = l.svcCtx.VideoClient.AddVideo(l.ctx, &videoclient.AddVideoRequest{
+		UserId:      req.UserId,
+		Thumbnail:   req.Thumbnail,
+		Title:       req.Title,
+		Types:       req.Types,
+		Duration:    req.Duration,
+		Area:        req.Area,
+		Description: req.Description,
+		TagList:     req.VideoTagList,
+		FileMd5:     req.FileMd5,
+	})
 
 	return
 }

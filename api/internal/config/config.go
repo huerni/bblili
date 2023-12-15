@@ -9,4 +9,5 @@ type Config struct {
 	rest.RestConf
 	User  zrpc.RpcClientConf
 	Video zrpc.RpcClientConf
+	File  zrpc.RpcClientConf
 }

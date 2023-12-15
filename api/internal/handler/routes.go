@@ -44,13 +44,58 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/api/file/getSuccessChunk",
+				Handler: GetSuccessChunkHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/file/uploadFileChunks",
+				Handler: UploadFileChunksHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/api/video/add",
 				Handler: AddVideoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/ws/barrages",
-				Handler: GetBarrageWsHandler(serverCtx),
+				Path:    "/api/video/get/:videoId/:page/:size",
+				Handler: GetVideosHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/video/getVideoDetail/:videoId",
+				Handler: GetVideoDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/video/getVideoSanLian/:videoId",
+				Handler: GetVideoSanLianHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/video/getVideoUserSanLian/:videoId/:userId",
+				Handler: GetVideoUserSanLianHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/video/operatorUserSanLian",
+				Handler: OperatorUserSanLianHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/video/addVideoComment",
+				Handler: AddVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/video/getVideoComment/:videoId",
+				Handler: GetVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/video/addBarrage",
+				Handler: AddBarrageHandler(serverCtx),
 			},
 		},
 	)

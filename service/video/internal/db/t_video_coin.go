@@ -26,9 +26,9 @@ func UpdateVideoCoin(ctx context.Context, coin *VideoCoin) error {
 	return DB.WithContext(ctx).Updates(coin).Error
 }
 
-func QueryVideoCoinByVideoIdAndUserId(ctx context.Context, videoId uint64, userID uint64) ([]*VideoCoin, error) {
-	res := make([]*VideoCoin, 0)
-	if err := DB.WithContext(ctx).Where("video_id = ? and user_id = ?", videoId, userID).Find(&res).Error; err != nil {
+func QueryVideoCoinByVideoIdAndUserId(ctx context.Context, videoId uint64, userID uint64) (*VideoCoin, error) {
+	res := &VideoCoin{}
+	if err := DB.WithContext(ctx).Where("video_id = ? and user_id = ?", videoId, userID).Find(res).Error; err != nil {
 		return nil, err
 	}
 
@@ -37,7 +37,9 @@ func QueryVideoCoinByVideoIdAndUserId(ctx context.Context, videoId uint64, userI
 
 func CountVideoCoinByVideoId(ctx context.Context, videoId uint64) (*int64, error) {
 	var res int64
-	if err := DB.Table("t_video_coin").Where("video_id = ?", videoId).Count(&res).Error; err != nil {
+
+	sqlstr := "select sum(amount) from t_video_coin where video_id = ?"
+	if err := DB.WithContext(ctx).Raw(sqlstr, videoId).Scan(&res).Error; err != nil {
 		return nil, err
 	}
 

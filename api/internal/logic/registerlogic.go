@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bblili/service/user/userclient"
 	"context"
 
 	"bblili/api/internal/svc"
@@ -24,7 +25,17 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) error {
-	// todo: add your logic here and delete this line
+
+	_, err := l.svcCtx.UserClient.AddUser(l.ctx, &userclient.AddUserRequest{
+		Username: req.Username,
+		Password: req.Password,
+		Phone:    req.Phone,
+		Email:    req.Email,
+	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

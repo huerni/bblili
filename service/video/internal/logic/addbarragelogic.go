@@ -3,6 +3,7 @@ package logic
 import (
 	"bblili/service/video/internal/db"
 	"context"
+	"fmt"
 	"gorm.io/gorm"
 
 	"bblili/service/video/internal/svc"
@@ -27,6 +28,16 @@ func NewAddBarrageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddBar
 
 // 添加弹幕
 func (l *AddBarrageLogic) AddBarrage(in *video.AddBarrageRequset) (*video.AddBarrageResponse, error) {
+
+	qvideo, err := db.QueryVideoByVideoId(l.ctx, in.BarrageInfo.VideoId)
+	if err != nil {
+		return nil, err
+	}
+
+	if qvideo == nil {
+		return nil, fmt.Errorf("该视频不存在")
+	}
+
 	if err := db.InsertDanMu(l.ctx, &db.Barrage{
 		Model:       gorm.Model{},
 		UserId:      in.BarrageInfo.UserId,

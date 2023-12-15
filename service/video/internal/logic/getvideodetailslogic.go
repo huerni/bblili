@@ -52,7 +52,7 @@ func (l *GetVideoDetailsLogic) GetVideoDetails(in *video.GetVideoDetailsRequest)
 		Types:       queryVideo.Types,
 		Duration:    queryVideo.Duration,
 		Area:        queryVideo.Area,
-		Description: queryVideo.Area,
+		Description: queryVideo.Description,
 		TagList:     nil,
 	}, UserInfo: userInfo}, nil
 }

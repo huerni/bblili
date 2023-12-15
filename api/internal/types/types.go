@@ -52,14 +52,49 @@ type GetUserResponse struct {
 	Email    string `json:"email"`
 }
 
-type AddVideoRequest struct {
+type GetSuccessChunkRequest struct {
+	FileMd5         string `json:"fileMd5"`
+	Filetype        string `json:"filetype"`
+	TotalChunkCount int32  `json:"totalChunkCount"`
+}
+
+type GetSuccessChunkResponse struct {
+	UploadID string `json:"uploadId"`
+	UuId     string `json:"uuId"`
+	Chunks   string `json:"chunks"`
+}
+
+type UploadFileChunksRequest struct {
+	FileMd5     string `json:"fileMd5"`
+	Filetype    string `json:"filetype"`
+	ChunkNumber int32  `json:"sliceNumber"`
+	ChunkSize   int32  `json:"sliceSize"`
+}
+
+type UploadFileChunksResponse struct {
+	Url string `json:"url"`
+}
+
+type VideoInfo struct {
 	UserId       uint64   `json:"userId"`
 	Url          string   `json:"url"`
 	Thumbnail    string   `json:"thumbnail"`
 	Title        string   `json:"title"`
 	Types        int32    `json:"types"`
 	Duration     int32    `json:"duration"`
-	Area         string   `json:"area"`
+	Area         int32    `json:"area"`
+	Description  string   `json:"description"`
+	VideoTagList []uint64 `json:"videoTagList"`
+}
+
+type AddVideoRequest struct {
+	UserId       uint64   `json:"userId"`
+	FileMd5      string   `json:"fileMd5"`
+	Thumbnail    string   `json:"thumbnail"`
+	Title        string   `json:"title"`
+	Types        int32    `json:"types"`
+	Duration     int32    `json:"duration"`
+	Area         int32    `json:"area"`
 	Description  string   `json:"description"`
 	VideoTagList []uint64 `json:"videoTagList"`
 }
@@ -67,9 +102,86 @@ type AddVideoRequest struct {
 type AddVideoResponse struct {
 }
 
-type GetBarragesWsRequest struct {
+type GetVideosRequest struct {
+	Area int32 `json:"area"`
+	Page int32 `json:"page"`
+	Size int32 `json:"size"`
+}
+
+type GetVideosResponse struct {
+	VideoInfos []*VideoInfo `json:"videoInfos"`
+}
+
+type GetVideoDetailRequest struct {
+	VideoId uint64 `json:"videoId"`
+}
+
+type GetVideoDetailResponse struct {
+	VideoInfo *VideoInfo `json:"videoInfo"`
+	UserInfo  *UserInfo  `json:"userInfo"`
+}
+
+type GetVideoSanLianRequest struct {
+	VideoId uint64 `json:"videoId"`
+}
+
+type GetVideoSanLianResponse struct {
+	CoinCount       int32 `json:"coinCount"`
+	LikeCount       int32 `json:"likeCount"`
+	CollectionCount int32 `json:"collectionCount"`
+}
+
+type GetVideoUserSanLianRequest struct {
+	VideoId uint64 `json:"videoId"`
+	UserId  uint64 `json:"userId"`
+}
+
+type GetVideoUserSanLianResponse struct {
+	CoinCount    int32 `json:"coinCount"`
+	IsLike       bool  `json:"isLike"`
+	IsCollection bool  `json:"isCollection"`
+}
+
+type OperationSanLianRequest struct {
+	VideoId  uint64 `json:"videoId"`
+	UserId   uint64 `json:"userId"`
+	GroupId  uint64 `json:"groupId"`
+	Operator int32  `json:"operator"`
+}
+
+type OperationSanLianResponse struct {
+}
+
+type AddVideoCommentRequest struct {
 	VideoId     uint64 `json:"videoId"`
-	CurrentTime int32  `json:"currentTime"`
+	UserId      uint64 `json:"userId"`
+	Comment     string `json:"comment"`
+	ReplyUserId uint64 `json:"replyUserId"`
+	RootId      uint64 `json:"rootId"`
+}
+
+type AddVideoCommentResponse struct {
+}
+
+type VideoComment struct {
+	VideoId       uint64          `json:"videoId"`
+	UserId        uint64          `json:"userId"`
+	Comment       string          `json:"comment"`
+	ReplyUserId   uint64          `json:"replyUserId"`
+	RootId        uint64          `json:"rootId"`
+	UserInfo      *UserInfo       `json:"userInfo"`
+	ReplyUserInfo *UserInfo       `json:"replyUserInfo"`
+	ChildList     []*VideoComment `json:"childList"`
+}
+
+type GetVideoCommentRequest struct {
+	VideoId uint64 `json:"videoId"`
+	Page    int32  `json:"page"`
+	Size    int32  `json:"size"`
+}
+
+type GetVideoCommentResponse struct {
+	VideoComments *VideoComment `json:"videoComments"`
 }
 
 type BarrageInfo struct {
@@ -79,6 +191,9 @@ type BarrageInfo struct {
 	BarrageTime int32  `json:"barrageTime"`
 }
 
-type GetBarragesResponse struct {
-	BarrageInfos []*BarrageInfo `json:"barrageInfos"`
+type AddBarrageRequest struct {
+	BarrageInfo *BarrageInfo `json:"barrageInfo"`
+}
+
+type AddBarrageResponse struct {
 }

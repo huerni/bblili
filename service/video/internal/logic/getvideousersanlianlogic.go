@@ -24,13 +24,13 @@ func NewGetVideoUserSanLianLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *GetVideoUserSanLianLogic) GetVideoUserSanLian(in *video.GetVideoUserSanLianRequest) (*video.GetVideoUserSanLianResponse, error) {
-	coins, err := db.QueryVideoCoinByVideoIdAndUserId(l.ctx, in.VideoId, in.UserId)
+	coin, err := db.QueryVideoCoinByVideoIdAndUserId(l.ctx, in.VideoId, in.UserId)
 	if err != nil {
 		return nil, err
 	}
 	coinCount := 0
-	if coins != nil && len(coins) > 0 {
-		coinCount = coins[0].Amount
+	if coin != nil {
+		coinCount = coin.Amount
 	}
 	likes, err := db.QueryVideoLikeByUserIdAndVideoId(l.ctx, in.UserId, in.VideoId)
 	if err != nil {
