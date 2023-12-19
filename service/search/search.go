@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bblili/service/search/internal/mq/comsumer"
+	"context"
 	"flag"
 	"fmt"
 
@@ -24,6 +26,9 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
+
+	comsumer.NewAddVideoComsumer(c, context.Background(), ctx)
+	comsumer.NewAddUserInfoComsumer(c, context.Background(), ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		search.RegisterSearchServer(grpcServer, server.NewSearchServer(ctx))

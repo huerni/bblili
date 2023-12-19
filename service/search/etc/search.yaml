@@ -6,3 +6,6 @@ Etcd:
   Key: search.rpc
 
 ElasticUrl: http://127.0.0.1:9200
+
+RocketMQ:
+  NameServer: 127.0.0.1:9876

@@ -1,9 +1,11 @@
 package logic
 
 import (
+	"bblili/service/user/internal/common/constant"
 	"bblili/service/user/internal/db"
 	"context"
-	"fmt"
+	"encoding/json"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"gorm.io/gorm"
 
 	"bblili/service/user/internal/svc"
@@ -27,14 +29,8 @@ func NewAddUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUs
 }
 
 func (l *AddUserInfoLogic) AddUserInfo(in *user.AddUserInfoRequest) (*user.AddUserInfoResponse, error) {
-	queryUser, err := db.QueryUserById(l.ctx, in.GetUserInfo().UserId)
-	if err != nil {
-		return nil, err
-	}
-	if queryUser == nil {
-		return nil, fmt.Errorf("该用户不存在!")
-	}
-	if err := db.InsertUserInfo(l.ctx, &db.UserInfo{
+
+	dbuserinfo := db.UserInfo{
 		Model:  gorm.Model{},
 		Nick:   in.UserInfo.Nick,
 		Avatar: in.UserInfo.Avatar,
@@ -42,8 +38,26 @@ func (l *AddUserInfoLogic) AddUserInfo(in *user.AddUserInfoRequest) (*user.AddUs
 		Gender: in.UserInfo.Gender,
 		Birth:  in.UserInfo.Birth,
 		UserId: in.UserInfo.UserId,
-	}); err != nil {
+	}
+
+	if err := db.InsertUserInfo(l.ctx, &dbuserinfo); err != nil {
 		return nil, err
 	}
+
+	// 通过rocketmq通知到search服务
+	str, err := json.Marshal(dbuserinfo)
+	if err != nil {
+		return nil, err
+	}
+	msg := &primitive.Message{
+		Topic: constant.ROCKETMQ_ADDUSERINFO_TOPIC,
+		Body:  str,
+	}
+	_, err = l.svcCtx.MQProducer.SendSync(l.ctx, msg)
+	if err != nil {
+		logx.Error("发送rocketmq消息失败")
+		return nil, err
+	}
+
 	return &user.AddUserInfoResponse{}, nil
 }

@@ -29,7 +29,24 @@ func NewGetContentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCon
 }
 
 func (l *GetContentLogic) GetContent(in *search.GetContentRequest) (*search.GetContentResponse, error) {
-	indexes := []string{"videos", "userinfo"}
+	indexes := []string{"videos", "userinfos"}
+
+	for _, indexName := range indexes {
+		exists, err := l.svcCtx.ElasClient.IndexExists(indexName).Do(l.ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !exists {
+			createIndex, err := l.svcCtx.ElasClient.CreateIndex(indexName).Do(l.ctx)
+			if err != nil {
+				return nil, err
+			}
+			if !createIndex.Acknowledged {
+				return nil, fmt.Errorf("Create index not acknowledged")
+			}
+		}
+	}
+
 	searchSource := elastic.NewSearchSource()
 	searchSource.Size(int(in.Size))
 	searchSource.From(int((in.Page - 1)))

@@ -14,6 +14,9 @@ Redis:
   Pass: "123456"
   Tls: false
 
+RocketMQ:
+  NameServer: 127.0.0.1:9876
+
 File:
   Etcd:
     Hosts:

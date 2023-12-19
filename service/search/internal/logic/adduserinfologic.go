@@ -25,7 +25,6 @@ func NewAddUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUs
 }
 
 func (l *AddUserInfoLogic) AddUserInfo(in *search.AddUserInfoRequest) (*search.AddUserInfoResponse, error) {
-	// todo: add your logic here and delete this line
 	indexName := "userinfos"
 	exists, err := l.svcCtx.ElasClient.IndexExists(indexName).Do(l.ctx)
 	if err != nil {

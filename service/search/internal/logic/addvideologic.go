@@ -23,7 +23,6 @@ func NewAddVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddVideo
 }
 
 func (l *AddVideoLogic) AddVideo(in *search.AddVideoRequest) (*search.AddVideoResponse, error) {
-	// todo: add your logic here and delete this line
 	indexName := "videos"
 	exists, err := l.svcCtx.ElasClient.IndexExists(indexName).Do(l.ctx)
 	if err != nil {
