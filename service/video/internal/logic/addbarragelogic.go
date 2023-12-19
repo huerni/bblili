@@ -1,15 +1,16 @@
 package logic
 
 import (
+	"bblili/service/video/internal/common/constant"
 	"bblili/service/video/internal/db"
-	"context"
-	"fmt"
-	"gorm.io/gorm"
-
 	"bblili/service/video/internal/svc"
 	"bblili/service/video/video"
-
+	"context"
+	"encoding/json"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
+	"strconv"
 )
 
 type AddBarrageLogic struct {
@@ -29,24 +30,44 @@ func NewAddBarrageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddBar
 // 添加弹幕
 func (l *AddBarrageLogic) AddBarrage(in *video.AddBarrageRequset) (*video.AddBarrageResponse, error) {
 
-	qvideo, err := db.QueryVideoByVideoId(l.ctx, in.BarrageInfo.VideoId)
-	if err != nil {
-		return nil, err
-	}
-
-	if qvideo == nil {
-		return nil, fmt.Errorf("该视频不存在")
-	}
-
-	if err := db.InsertDanMu(l.ctx, &db.Barrage{
+	barrage := db.Barrage{
 		Model:       gorm.Model{},
 		UserId:      in.BarrageInfo.UserId,
 		VideoId:     in.BarrageInfo.VideoId,
 		Content:     in.BarrageInfo.Content,
 		BarrageTime: in.BarrageInfo.BarrageTime,
-	}); err != nil {
+	}
+
+	if err := db.InsertDanMu(l.ctx, &barrage); err != nil {
 		return nil, err
 	}
+
+	go func() {
+		// 加分布式锁
+		mutex := l.svcCtx.RedisSync.NewMutex(constant.LOCK_BARRAGE_SORTEDEST)
+		// 对key进行
+		if err := mutex.Lock(); err != nil {
+			logx.Errorf("获得redis分布式锁失败-%s", err)
+		}
+
+		defer func() {
+			// 释放互斥锁
+			if ok, err := mutex.Unlock(); !ok || err != nil {
+				logx.Errorf("释放redis分布式锁失败-%s", err)
+			}
+		}()
+
+		key := fmt.Sprintf(constant.BARRAGE_SORTEDSET, strconv.FormatUint(in.BarrageInfo.VideoId, 10))
+		bytes, err := json.Marshal(barrage)
+		if err != nil {
+			logx.Errorf("redis插入数据失败-%s", key)
+		}
+
+		isadd, err := l.svcCtx.RedisClient.Zadd(key, int64(barrage.BarrageTime), string(bytes))
+		if isadd == false || err != nil {
+			logx.Errorf("redis插入数据失败-%s-%s", key, err)
+		}
+	}()
 
 	return &video.AddBarrageResponse{}, nil
 }

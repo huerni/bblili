@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bblili/service/user/userclient"
 	"bblili/service/video/videoclient"
 	"context"
 
@@ -43,13 +44,15 @@ func (l *GetVideoDetailLogic) GetVideoDetail(req *types.GetVideoDetailRequest) (
 		VideoTagList: res.Video.TagList,
 	}
 
+	userres, err := l.svcCtx.UserClient.GetUserInfo(l.ctx, &userclient.GetUserInfoRequest{UserId: res.Video.UserId})
+
 	resp.UserInfo = &types.UserInfo{
-		Id:     res.UserInfo.Id,
-		Nick:   res.UserInfo.Nick,
-		Avatar: res.UserInfo.Avatar,
-		Sign:   res.UserInfo.Sign,
-		Gender: res.UserInfo.Gender,
-		Birth:  res.UserInfo.Birth,
+		Id:     userres.UserInfo.Id,
+		Nick:   userres.UserInfo.Nick,
+		Avatar: userres.UserInfo.Avatar,
+		Sign:   userres.UserInfo.Sign,
+		Gender: userres.UserInfo.Gender,
+		Birth:  userres.UserInfo.Birth,
 	}
 
 	return

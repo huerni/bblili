@@ -1,5 +1,11 @@
 version: '3'
 
+networks:
+  bblili_default:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+
 services:
   mysql:
     container_name: bblili-mysql
@@ -15,6 +21,10 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     restart: always
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.2
+
 
   Etcd:
     image: bitnami/etcd:latest
@@ -26,6 +36,9 @@ services:
     ports:
       - "2379:2379"
       - "2380:2380"
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.3
 
   redis:
     image:  redis:latest
@@ -36,6 +49,9 @@ services:
       - TZ=Asia/Shanghai # 设置时区
     ports:
       - 6379:6379
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.4
 
 
   elastic:
@@ -50,6 +66,9 @@ services:
     restart: always
     ports:
       - 9200:9200
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.6.1
@@ -61,44 +80,9 @@ services:
       - elastic
     ports:
       - 5601:5601
-
-  fastdfs-tracker:
-    image: season/fastdfs:1.2
-    container_name: bblili-tracker
-    restart: no
-    ports:
-      - 22122:22122
-    command: "tracker"
-
-  fastdfs-storage:
-    image: season/fastdfs:1.2
-    container_name: bblili-storage
-    depends_on:
-      - fastdfs-tracker
-    restart: no
-    volumes:
-      - "./docker/fastdfs/fdfs_conf/storage.conf:/fdfs_conf/storage.conf"
-      - "./docker/fastdfs/store_path:/fastdfs/store_path"
-    ports:
-      - "23000:23000"
-    environment:
-      - TRACKER_SERVER=bblili-tracker:22122
-    command: "storage"
-
-  fastdfs-nginx:
-    image: season/fastdfs:1.2
-    container_name: bblili-nginx
-    restart: always
-    volumes:
-      - "./docker/fastdfs/nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf"
-      - "./docker/fastdfs/store_path:/fastdfs/store_path"
-    links:
-      - fastdfs-tracker
-    ports:
-      - "8088:8088"
-    environment:
-      - TRACKER_SERVER=bblili-tracker:22122
-    command: "nginx"
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.6
 
   minio:
     image: minio/minio
@@ -111,3 +95,50 @@ services:
       MINIO_SECRET_KEY: admin123 #管理后台密码，最小8个字符
     command: server --console-address ':9001' /data  #指定容器中的目录 /data
     restart: always
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.7
+
+  rmqnamesrv:
+    container_name: rmqnamesrv
+    image: foxiswho/rocketmq:server-4.5.1
+    ports:
+      - "9876:9876"
+    restart: always
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.8
+
+  rmqbroker:
+    container_name: rmqbroker
+    image: foxiswho/rocketmq:broker-4.5.1
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    volumes:
+      - ./docker/rocketmq/conf/broker.conf:/etc/rocketmq/broker.conf
+    environment:
+      NAMESRV_ADDR: "rmqnamesrv:9876"
+      JAVA_OPTS: "-Duser.home=/opt"
+      JAVA_OPT_EXT: "-server -Xms512m -Xmx512m"
+    command: mqbroker -c /etc/rocketmq/broker.conf
+    depends_on:
+      - rmqnamesrv
+    restart: always
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.9
+
+  rmqconsole:
+    container_name: rmqconsole
+    image: pangliang/rocketmq-console-ng
+    environment:
+      JAVA_OPTS: "-Drocketmq.config.namesrvAddr=rmqnamesrv:9876 -Drocketmq.config.isVIPChannel=false"
+    ports:
+      - "8088:8080"
+    restart: always
+    depends_on:
+      - rmqnamesrv
+    networks:
+      bblili_default:
+        ipv4_address: 172.18.0.10

@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"bblili/service/user/userclient"
 	"bblili/service/video/internal/db"
 	"context"
 
@@ -30,18 +29,6 @@ func (l *GetVideoDetailsLogic) GetVideoDetails(in *video.GetVideoDetailsRequest)
 	if err != nil {
 		return nil, err
 	}
-	response, err := l.svcCtx.UserClient.GetUserInfo(l.ctx, &userclient.GetUserInfoRequest{UserId: queryVideo.UserId})
-	if err != nil {
-		return nil, err
-	}
-	userInfo := &video.UserInfo{
-		Id:     response.UserInfo.Id,
-		Nick:   response.UserInfo.Nick,
-		Avatar: response.UserInfo.Avatar,
-		Sign:   response.UserInfo.Sign,
-		Gender: response.UserInfo.Gender,
-		Birth:  response.UserInfo.Birth,
-	}
 
 	return &video.GetVideoDetailsResponse{Video: &video.VideoInfo{
 		Id:          uint64(queryVideo.ID),
@@ -54,5 +41,5 @@ func (l *GetVideoDetailsLogic) GetVideoDetails(in *video.GetVideoDetailsRequest)
 		Area:        queryVideo.Area,
 		Description: queryVideo.Description,
 		TagList:     nil,
-	}, UserInfo: userInfo}, nil
+	}}, nil
 }

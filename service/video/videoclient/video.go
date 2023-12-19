@@ -38,7 +38,6 @@ type (
 	RecommendResponse           = video.RecommendResponse
 	Request                     = video.Request
 	Response                    = video.Response
-	UserInfo                    = video.UserInfo
 	VideoComment                = video.VideoComment
 	VideoInfo                   = video.VideoInfo
 	ViewVideoRequest            = video.ViewVideoRequest

@@ -60,7 +60,7 @@ func QueryVideoByUserId(ctx context.Context, page int32, size int32, userId uint
 	return res, nil
 }
 
-func QueryVideoByArea(ctx context.Context, page int32, size int32, area string) ([]*Video, error) {
+func QueryVideoByArea(ctx context.Context, page int32, size int32, area int32) ([]*Video, error) {
 	res := make([]*Video, 0)
 
 	sqlstr := "select * from t_video where area = ? and  id = (select id from t_video order by created_at limit ? offset ?)"

@@ -24,15 +24,6 @@ message VideoInfo {
   repeated uint64 tagList = 10;
 }
 
-message UserInfo {
-  uint64 id = 1;
-  string nick = 2;
-  string avatar = 3;
-  string sign = 4;
-  int32 gender = 5;
-  string birth = 6;
-}
-
 message AddVideoRequest {
   uint64 userId = 1;
   string thumbnail = 2;
@@ -73,7 +64,6 @@ message GetVideoDetailsRequest {
 
 message GetVideoDetailsResponse {
   VideoInfo video = 1;
-  UserInfo userInfo = 2;
 }
 
 message RecommendRequest {
@@ -123,8 +113,6 @@ message VideoComment {
   string comment = 3;
   uint64 replyUserId = 4;
   uint64 rootId = 5;
-  UserInfo userInfo = 6;
-  UserInfo replyUserInfo = 7;
   repeated VideoComment childList = 8;
 }
 

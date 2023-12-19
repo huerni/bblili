@@ -28,12 +28,13 @@ func (l *GetVideosLogic) GetVideos(in *video.GetVideosRequest) (*video.GetVideos
 	var qvideo []*db.Video
 	var err error
 
-	if in.Area != "" {
+	if in.Area != 0 {
 		qvideo, err = db.QueryVideoByArea(l.ctx, in.Page, in.Size, in.Area)
 		if err != nil {
 			return nil, err
 		}
 	}
+
 	qvideo, err = db.QueryVideo(l.ctx, in.Page, in.Size)
 	if err != nil {
 		return nil, err

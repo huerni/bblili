@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bblili/service/user/userclient"
 	"bblili/service/video/videoclient"
 	"context"
 
@@ -33,59 +34,98 @@ func (l *GetVideoCommentLogic) GetVideoComment(req *types.GetVideoCommentRequest
 	})
 
 	videoComments := make([]*types.VideoComment, 0)
+	usermap := make(map[uint64]*types.UserInfo, 0)
+
 	for _, videocomment := range res.VideoComment {
 		childlist := make([]*types.VideoComment, 0)
 		for _, child := range videocomment.ChildList {
-			childlist = append(childlist, &types.VideoComment{
-				VideoId:     child.VideoId,
-				UserId:      child.UserId,
-				Comment:     child.Comment,
-				ReplyUserId: child.ReplyUserId,
-				RootId:      child.RootId,
-				UserInfo: &types.UserInfo{
-					Id:     child.UserInfo.Id,
-					Nick:   child.UserInfo.Nick,
-					Avatar: child.UserInfo.Avatar,
-					Sign:   child.UserInfo.Sign,
-					Gender: child.UserInfo.Gender,
-					Birth:  child.UserInfo.Birth,
-				},
-				ReplyUserInfo: &types.UserInfo{
-					Id:     child.ReplyUserInfo.Id,
-					Nick:   child.ReplyUserInfo.Nick,
-					Avatar: child.ReplyUserInfo.Avatar,
-					Sign:   child.ReplyUserInfo.Sign,
-					Gender: child.ReplyUserInfo.Gender,
-					Birth:  child.ReplyUserInfo.Birth,
-				},
-				ChildList: nil,
-			})
+			typechild := types.VideoComment{
+				VideoId:       child.VideoId,
+				UserId:        child.UserId,
+				Comment:       child.Comment,
+				ReplyUserId:   child.ReplyUserId,
+				RootId:        child.RootId,
+				UserInfo:      nil,
+				ReplyUserInfo: nil,
+				ChildList:     nil,
+			}
+			value, exists := usermap[child.UserId]
+			if exists {
+				typechild.UserInfo = value
+			} else {
+				userInfo, err := l.getUserInfo(child.UserId)
+				if err != nil {
+					return
+				}
+				usermap[child.UserId] = userInfo
+				typechild.UserInfo = userInfo
+			}
+
+			value, exists = usermap[child.ReplyUserId]
+			if exists {
+				typechild.ReplyUserInfo = value
+			} else {
+				userInfo, err := l.getUserInfo(child.ReplyUserId)
+				if err != nil {
+					return
+				}
+				usermap[child.ReplyUserId] = userInfo
+				typechild.ReplyUserInfo = userInfo
+			}
+
+			childlist = append(childlist, &typechild)
 		}
-		videoComments = append(videoComments, &types.VideoComment{
+
+		typecomment := types.VideoComment{
 			VideoId:     videocomment.VideoId,
 			UserId:      videocomment.UserId,
 			Comment:     videocomment.Comment,
 			ReplyUserId: videocomment.ReplyUserId,
 			RootId:      videocomment.RootId,
-			UserInfo: &types.UserInfo{
-				Id:     videocomment.UserInfo.Id,
-				Nick:   videocomment.UserInfo.Nick,
-				Avatar: videocomment.UserInfo.Avatar,
-				Sign:   videocomment.UserInfo.Sign,
-				Gender: videocomment.UserInfo.Gender,
-				Birth:  videocomment.UserInfo.Birth,
-			},
-			ReplyUserInfo: &types.UserInfo{
-				Id:     videocomment.ReplyUserInfo.Id,
-				Nick:   videocomment.ReplyUserInfo.Nick,
-				Avatar: videocomment.ReplyUserInfo.Avatar,
-				Sign:   videocomment.ReplyUserInfo.Sign,
-				Gender: videocomment.ReplyUserInfo.Gender,
-				Birth:  videocomment.ReplyUserInfo.Birth,
-			},
-			ChildList: childlist,
-		})
+			ChildList:   childlist,
+		}
+
+		value, exists := usermap[videocomment.UserId]
+		if exists {
+			typecomment.UserInfo = value
+		} else {
+			userInfo, err := l.getUserInfo(videocomment.UserId)
+			if err != nil {
+				return
+			}
+			usermap[videocomment.UserId] = userInfo
+			typecomment.UserInfo = userInfo
+		}
+
+		value, exists = usermap[videocomment.ReplyUserId]
+		if exists {
+			typecomment.ReplyUserInfo = value
+		} else {
+			userInfo, err := l.getUserInfo(videocomment.ReplyUserId)
+			if err != nil {
+				return
+			}
+			usermap[videocomment.ReplyUserId] = userInfo
+			typecomment.ReplyUserInfo = userInfo
+		}
+
+		videoComments = append(videoComments, &typecomment)
 	}
 
 	return
+}
+
+func (l *GetVideoCommentLogic) getUserInfo(userId uint64) (*types.UserInfo, error) {
+	response, err := l.svcCtx.UserClient.GetUserInfo(l.ctx, &userclient.GetUserInfoRequest{UserId: userId})
+	if err != nil {
+		return nil, err
+	}
+	return &types.UserInfo{
+		Id:     response.UserInfo.Id,
+		Nick:   response.UserInfo.Nick,
+		Avatar: response.UserInfo.Avatar,
+		Sign:   response.UserInfo.Sign,
+		Gender: response.UserInfo.Gender,
+		Birth:  response.UserInfo.Birth,
+	}, nil
 }
